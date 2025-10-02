@@ -1,0 +1,91 @@
+; ModuleID = '/project/test/llvm-test-suite/SingleSource/Regression/C/gcc-c-torture/execute/20000622-1.c'
+source_filename = "/project/test/llvm-test-suite/SingleSource/Regression/C/gcc-c-torture/execute/20000622-1.c"
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local i64 @foo(i64 noundef %0, i64 noundef %1, i64 noundef %2) #0 {
+  %4 = alloca i64, align 8
+  %5 = alloca i64, align 8
+  %6 = alloca i64, align 8
+  store i64 %0, i64* %4, align 8
+  store i64 %1, i64* %5, align 8
+  store i64 %2, i64* %6, align 8
+  %7 = load i64, i64* %4, align 8
+  %8 = icmp ne i64 %7, 12
+  br i1 %8, label %15, label %9
+
+9:                                                ; preds = %3
+  %10 = load i64, i64* %5, align 8
+  %11 = icmp ne i64 %10, 1
+  br i1 %11, label %15, label %12
+
+12:                                               ; preds = %9
+  %13 = load i64, i64* %6, align 8
+  %14 = icmp ne i64 %13, 11
+  br i1 %14, label %15, label %16
+
+15:                                               ; preds = %12, %9, %3
+  call void @abort() #2
+  unreachable
+
+16:                                               ; preds = %12
+  ret i64 0
+}
+
+; Function Attrs: noreturn
+declare dso_local void @abort() #1
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local i64 @bar(i64 noundef %0, i64 noundef %1) #0 {
+  %3 = alloca i64, align 8
+  %4 = alloca i64, align 8
+  store i64 %0, i64* %3, align 8
+  store i64 %1, i64* %4, align 8
+  %5 = load i64, i64* %4, align 8
+  ret i64 %5
+}
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local void @baz(i64 noundef %0, i64 noundef %1, i8* noundef %2) #0 {
+  %4 = alloca i64, align 8
+  %5 = alloca i64, align 8
+  %6 = alloca i8*, align 8
+  %7 = alloca i64, align 8
+  store i64 %0, i64* %4, align 8
+  store i64 %1, i64* %5, align 8
+  store i8* %2, i8** %6, align 8
+  %8 = load i8*, i8** %6, align 8
+  %9 = ptrtoint i8* %8 to i64
+  store i64 %9, i64* %7, align 8
+  %10 = load i64, i64* %7, align 8
+  %11 = load i64, i64* %4, align 8
+  %12 = call i64 @bar(i64 noundef %11, i64 noundef 1)
+  %13 = load i64, i64* %5, align 8
+  %14 = call i64 @foo(i64 noundef %10, i64 noundef %12, i64 noundef %13)
+  ret void
+}
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local i32 @main() #0 {
+  %1 = alloca i32, align 4
+  store i32 0, i32* %1, align 4
+  call void @baz(i64 noundef 10, i64 noundef 11, i8* noundef inttoptr (i64 12 to i8*))
+  call void @exit(i32 noundef 0) #2
+  unreachable
+}
+
+; Function Attrs: noreturn
+declare dso_local void @exit(i32 noundef) #1
+
+attributes #0 = { noinline nounwind uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
+attributes #1 = { noreturn "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
+attributes #2 = { noreturn }
+
+!llvm.module.flags = !{!0, !1, !2}
+!llvm.ident = !{!3}
+
+!0 = !{i32 1, !"wchar_size", i32 4}
+!1 = !{i32 7, !"uwtable", i32 1}
+!2 = !{i32 7, !"frame-pointer", i32 2}
+!3 = !{!"clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)"}

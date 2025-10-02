@@ -1,0 +1,52 @@
+; ModuleID = './rglobals.ll'
+source_filename = "/project/test/llvm-test-suite/MultiSource/Benchmarks/Prolangs-C/TimberWolfMC/rglobals.c"
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct.gnode = type { i32, i32, i32, i32, i32, i32, i32, %struct.gnode* }
+%struct.pnode = type { i32, %struct.nnode*, %struct.list2* }
+%struct.nnode = type { i32, i32, i16, i16 }
+%struct.list2 = type { i32, %struct.list2* }
+%struct.quad = type { i32, i32, i32, i32, %struct.quad*, %struct.quad* }
+%struct.nrbox = type { %struct.altbox**, i32, i32, i32 }
+%struct.altbox = type { i32*, i32, %struct.chanbox* }
+%struct.chanbox = type { i32, i32, i32, i32, %struct.chanbox* }
+%struct.path = type { i16*, i32, i32, i32, [5 x i32] }
+
+@tempArray = dso_local global i16* null, align 8
+@gnodeArray = dso_local global %struct.gnode** null, align 8
+@pnodeArray = dso_local global %struct.pnode* null, align 8
+@numnodes = dso_local global i32 0, align 4
+@numpins = dso_local global i32 0, align 4
+@maxpnode = dso_local global i32 0, align 4
+@pnameArray = dso_local global i8** null, align 8
+@nnameArray = dso_local global i8** null, align 8
+@pinOffset = dso_local global i32* null, align 8
+@pinlist = dso_local global %struct.quad* null, align 8
+@pathList = dso_local global i32** null, align 8
+@netSegArray = dso_local global i16** null, align 8
+@segList = dso_local global i16* null, align 8
+@segPtr = dso_local global i32 0, align 4
+@sourceList = dso_local global i16* null, align 8
+@sourcePtr = dso_local global i32 0, align 4
+@targetList = dso_local global i16* null, align 8
+@targetPtr = dso_local global i32 0, align 4
+@Mpaths = dso_local global i32 0, align 4
+@delSourceList = dso_local global i16* null, align 8
+@addTargetList = dso_local global i16* null, align 8
+@pathLength = dso_local global i32 0, align 4
+@savePaths = dso_local global i16** null, align 8
+@largestNet = dso_local global i32 0, align 4
+@netRoutes = dso_local global %struct.nrbox* null, align 8
+@gtrace = dso_local global i16** null, align 8
+@pathArray = dso_local global %struct.path* null, align 8
+@MAXPATHS = dso_local global i32 0, align 4
+@EXTRASOURCES = dso_local global i32 0, align 4
+
+!llvm.module.flags = !{!0, !1, !2}
+!llvm.ident = !{!3}
+
+!0 = !{i32 1, !"wchar_size", i32 4}
+!1 = !{i32 7, !"uwtable", i32 1}
+!2 = !{i32 7, !"frame-pointer", i32 2}
+!3 = !{!"clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)"}

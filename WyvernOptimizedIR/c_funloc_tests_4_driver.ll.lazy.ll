@@ -1,0 +1,80 @@
+; ModuleID = './c_funloc_tests_4_driver.ll'
+source_filename = "/project/test/llvm-test-suite/Fortran/gfortran/regression/c_funloc_tests_4_driver.c"
+target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct._IO_FILE = type { i32, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, %struct._IO_marker*, %struct._IO_FILE*, i32, i32, i64, i16, i8, [1 x i8], i8*, i64, %struct._IO_codecvt*, %struct._IO_wide_data*, %struct._IO_FILE*, i8*, i64, i32, [20 x i8] }
+%struct._IO_marker = type opaque
+%struct._IO_codecvt = type opaque
+%struct._IO_wide_data = type opaque
+
+@.str = private unnamed_addr constant [19 x i8] c"hello from C main\0A\00", align 1
+@.str.1 = private unnamed_addr constant [19 x i8] c"hello from c_sub0\0A\00", align 1
+@.str.2 = private unnamed_addr constant [19 x i8] c"hello from c_sub1\0A\00", align 1
+@stderr = external dso_local global %struct._IO_FILE*, align 8
+@.str.3 = private unnamed_addr constant [49 x i8] c"Fortran function did not return expected value!\0A\00", align 1
+@str = private unnamed_addr constant [18 x i8] c"hello from C main\00", align 1
+@str.1 = private unnamed_addr constant [18 x i8] c"hello from c_sub0\00", align 1
+@str.2 = private unnamed_addr constant [18 x i8] c"hello from c_sub1\00", align 1
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local i32 @main(i32 noundef %0, i8** nocapture noundef readnone %1) #0 {
+  %puts = call i32 @puts(i8* nonnull dereferenceable(1) getelementptr inbounds ([18 x i8], [18 x i8]* @str, i64 0, i64 0))
+  call void @sub0() #4
+  ret i32 0
+}
+
+declare dso_local i32 @printf(i8* noundef, ...) #1
+
+declare dso_local void @sub0() #1
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local void @c_sub0(void ()* nocapture noundef readonly %0) #0 {
+  %puts = call i32 @puts(i8* nonnull dereferenceable(1) getelementptr inbounds ([18 x i8], [18 x i8]* @str.1, i64 0, i64 0))
+  call void %0() #4
+  ret void
+}
+
+; Function Attrs: noinline nounwind uwtable
+define dso_local void @c_sub1(i32 (i32)* nocapture noundef readonly %0) #0 {
+  %puts = call i32 @puts(i8* nonnull dereferenceable(1) getelementptr inbounds ([18 x i8], [18 x i8]* @str.2, i64 0, i64 0))
+  %2 = call i32 %0(i32 noundef 10) #4
+  %.not = icmp eq i32 %2, 10
+  br i1 %.not, label %6, label %3
+
+3:                                                ; preds = %1
+  %4 = load %struct._IO_FILE*, %struct._IO_FILE** @stderr, align 8
+  %5 = call i64 @fwrite(i8* getelementptr inbounds ([49 x i8], [49 x i8]* @.str.3, i64 0, i64 0), i64 48, i64 1, %struct._IO_FILE* %4) #5
+  call void @abort() #6
+  unreachable
+
+6:                                                ; preds = %1
+  ret void
+}
+
+declare dso_local i32 @fprintf(%struct._IO_FILE* noundef, i8* noundef, ...) #1
+
+; Function Attrs: noreturn
+declare dso_local void @abort() #2
+
+; Function Attrs: nofree nounwind
+declare noundef i32 @puts(i8* nocapture noundef readonly) #3
+
+; Function Attrs: nofree nounwind
+declare noundef i64 @fwrite(i8* nocapture noundef, i64 noundef, i64 noundef, %struct._IO_FILE* nocapture noundef) #3
+
+attributes #0 = { noinline nounwind uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
+attributes #1 = { "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
+attributes #2 = { noreturn "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
+attributes #3 = { nofree nounwind }
+attributes #4 = { nounwind }
+attributes #5 = { cold }
+attributes #6 = { noreturn nounwind }
+
+!llvm.module.flags = !{!0, !1, !2}
+!llvm.ident = !{!3}
+
+!0 = !{i32 1, !"wchar_size", i32 4}
+!1 = !{i32 7, !"uwtable", i32 1}
+!2 = !{i32 7, !"frame-pointer", i32 2}
+!3 = !{!"clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)"}
